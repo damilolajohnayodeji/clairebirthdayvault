@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Claire's Birthday Vault</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="dashboard-nav">
+    <div class="dashboard-nav-inner">
+      <div class="nav-logo">
+        <span class="logo-dot"></span>
+        Claire's Vault
+        <span class="badge badge-pink" style="margin-left: 6px;">Dashboard</span>
+      </div>
+      <div class="nav-actions">
+        <a href="index.html" class="btn btn-ghost btn-sm">Public Page</a>
+        <button class="btn btn-soft btn-sm" onclick="logout()">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <div class="dashboard-page">
+      <div class="container">
+
+        <!-- Page header -->
+        <div style="margin-bottom: var(--s-7);">
+          <div class="hero-eyebrow" style="margin-bottom: var(--s-3);">
+            <span class="hero-eyebrow-dot"></span>
+            Happy Birthday, Claire 🎂
+          </div>
+          <h1 style="font-size: var(--text-2xl); font-weight: 300;">
+            Your <strong>Message Vault</strong>
+          </h1>
+          <p style="font-size: var(--text-md); color: var(--muted); font-weight: 300; margin-top: 6px;">
+            Every wish, beautifully preserved.
+          </p>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+          <div class="stat-card">
+            <div class="stat-card-icon stat-card-icon-pink">💌</div>
+            <div class="stat-card-content">
+              <div class="stat-card-value" id="stat-total">–</div>
+              <div class="stat-card-label">Total Messages</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon stat-card-icon-lavender">✨</div>
+            <div class="stat-card-content">
+              <div class="stat-card-value" id="stat-today">–</div>
+              <div class="stat-card-label">Today's Wishes</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon stat-card-icon-sky">🎨</div>
+            <div class="stat-card-content">
+              <div class="stat-card-value">3</div>
+              <div class="stat-card-label">Card Designs</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section Header -->
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Birthday Wishes</h2>
+            <p class="section-sub">Preview, download, or remove each message card.</p>
+          </div>
+          <button class="btn btn-soft btn-sm" onclick="loadMessages()">
+            ↻ Refresh
+          </button>
+        </div>
+
+        <!-- Messages Grid -->
+        <div class="messages-grid" id="messages-grid">
+          <!-- Skeleton loaders -->
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div>© 2026 Claire's Birthday Vault. All rights reserved.</div>
+        <div>Built by Damilola John Ayodeji &nbsp;·&nbsp; +234 904 924 0994</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="card-modal" onclick="closeModalOutside(event)">
+    <div class="modal-box">
+
+      <div class="modal-header">
+        <div>
+          <h3 id="modal-sender-name">Birthday Card</h3>
+          <p style="font-size: var(--text-sm); color: var(--muted); font-weight:300; margin-top:2px;" id="modal-date"></p>
+        </div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Design Selector -->
+        <p style="font-size: var(--text-sm); font-weight: 500; color: var(--heading); margin-bottom: var(--s-3);">Choose a card design</p>
+        <div class="design-selector" id="design-selector">
+          <button class="design-option active" data-design="pastel" onclick="selectDesign(this, 'pastel')">
+            <span class="swatch" style="background: linear-gradient(135deg, #f6c7cf, #aea3ff);"></span>
+            Elegant Pastel
+          </button>
+          <button class="design-option" data-design="colorful" onclick="selectDesign(this, 'colorful')">
+            <span class="swatch" style="background: linear-gradient(135deg, #aea3ff, #8ee5ee);"></span>
+            Modern Colorful
+          </button>
+          <button class="design-option" data-design="luxury" onclick="selectDesign(this, 'luxury')">
+            <span class="swatch" style="background: linear-gradient(135deg, #e8dfc8, #c8b89a);"></span>
+            Minimal Luxury
+          </button>
+        </div>
+
+        <!-- Card Preview Area -->
+        <div style="width:100%; overflow:hidden; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); margin-bottom: var(--s-5);">
+          <div id="card-preview-wrapper" style="transform-origin: top left;">
+            <div id="birthday-card-render" class="bday-card card-pastel">
+              <!-- Dynamically filled -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display:flex; gap: var(--s-3); justify-content: flex-end;">
+          <button class="btn btn-ghost" onclick="closeModal()">Close</button>
+          <button class="btn btn-primary" onclick="downloadCard()">
+            ⬇ Download Card
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- html2canvas CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+  <script src="dashboard.js"></script>
+
+</body>
+</html>

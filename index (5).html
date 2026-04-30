@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claire's Birthday Message Vault</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <span class="logo-dot"></span>
+        Claire's Vault
+      </div>
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-inner">
+
+          <!-- Left: Text -->
+          <div class="hero-left">
+            <div class="hero-eyebrow">
+              <span class="hero-eyebrow-dot"></span>
+              A special place for her special day
+            </div>
+            <h1 class="hero-title">
+              Send Claire<br />
+              a <strong>birthday<br />wish</strong> she'll<br />
+              treasure.
+            </h1>
+            <p class="hero-sub">
+              Leave a heartfelt message for Claire's birthday. Every note goes into her personal vault — beautifully preserved, forever hers.
+            </p>
+            <div class="hero-stats">
+              <div class="stat-item">
+                <span class="stat-number" id="js-msg-count">–</span>
+                <span class="stat-label">Messages sent</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">3</span>
+                <span class="stat-label">Card designs</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">∞</span>
+                <span class="stat-label">Love stored</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Form -->
+          <div class="hero-right">
+            <div class="form-panel">
+
+              <!-- Form -->
+              <div id="form-section">
+                <div class="form-panel-header">
+                  <h2 class="form-panel-title">Leave Your Wishes</h2>
+                  <p class="form-panel-sub">Your message will be delivered straight to Claire's vault.</p>
+                </div>
+
+                <form class="form-stack" id="wish-form" novalidate>
+                  <div class="input-group">
+                    <label for="name">Your Name</label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      placeholder="e.g. Tolu, Aunty Bisi…"
+                      autocomplete="name"
+                      required
+                    />
+                  </div>
+
+                  <div class="input-group">
+                    <label for="message">Your Birthday Message</label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      placeholder="Write something beautiful for Claire…"
+                      required
+                    ></textarea>
+                  </div>
+
+                  <div id="form-error" class="login-error" style="display:none;"></div>
+
+                  <button type="submit" class="btn btn-primary btn-lg" id="submit-btn">
+                    <span id="btn-label">Send Your Wishes</span>
+                    <div class="spinner" id="btn-spinner" style="display:none;"></div>
+                  </button>
+                </form>
+              </div>
+
+              <!-- Success State -->
+              <div class="success-state" id="success-section">
+                <div class="success-icon">🎀</div>
+                <h2 class="success-title font-display">It's on its way!</h2>
+                <p class="success-sub">Your message has been safely tucked into Claire's vault.<br />She's going to love it. 🎂</p>
+                <button class="btn btn-soft" onclick="resetForm()">Send another message</button>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES ROW -->
+    <section class="features-row">
+      <div class="container">
+        <div class="features-grid">
+
+          <div class="feature-item">
+            <div class="feature-icon feature-icon-pink">🎁</div>
+            <div class="feature-title">Beautiful Cards</div>
+            <p class="feature-desc">Every message becomes a downloadable birthday card in one of three stunning designs.</p>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon feature-icon-lavender">🔒</div>
+            <div class="feature-title">Private Vault</div>
+            <p class="feature-desc">Only Claire can log in and read the messages. Everything is safely stored in her vault.</p>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon feature-icon-sky">💾</div>
+            <div class="feature-title">Download & Keep</div>
+            <p class="feature-desc">Claire can preview and download each message as a high-resolution PNG to keep forever.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div>© 2026 Claire's Birthday Vault. All rights reserved.</div>
+        <div>Built by Damilola John Ayodeji &nbsp;·&nbsp; +234 904 924 0994</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+
+  <script>
+    // Load message count on page load
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const { count } = await supabase
+          .from('messages')
+          .select('*', { count: 'exact', head: true })
+          .eq('event_id', 'claire');
+        const el = document.getElementById('js-msg-count');
+        if (el) el.textContent = count ?? '0';
+      } catch(e) { /* silent */ }
+    });
+
+    // Form submission
+    document.getElementById('wish-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name    = document.getElementById('name').value.trim();
+      const message = document.getElementById('message').value.trim();
+      const errEl   = document.getElementById('form-error');
+      const btn     = document.getElementById('submit-btn');
+      const label   = document.getElementById('btn-label');
+      const spinner = document.getElementById('btn-spinner');
+
+      // Validate
+      if (!name || !message) {
+        errEl.textContent = 'Please fill in your name and message before sending.';
+        errEl.style.display = 'block';
+        return;
+      }
+      errEl.style.display = 'none';
+
+      // Loading state
+      btn.disabled = true;
+      label.textContent = 'Sending…';
+      spinner.style.display = 'block';
+
+      try {
+        const { error } = await supabase.from('messages').insert({
+          event_id: 'claire',
+          name,
+          message
+        });
+
+        if (error) throw error;
+
+        // Show success
+        document.getElementById('form-section').style.display = 'none';
+        document.getElementById('success-section').classList.add('visible');
+
+        // Update count
+        const countEl = document.getElementById('js-msg-count');
+        if (countEl) {
+          const curr = parseInt(countEl.textContent) || 0;
+          countEl.textContent = curr + 1;
+        }
+
+      } catch (err) {
+        errEl.textContent = 'Something went wrong. Please try again.';
+        errEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        label.textContent = 'Send Your Wishes';
+        spinner.style.display = 'none';
+      }
+    });
+
+    function resetForm() {
+      document.getElementById('form-section').style.display = 'block';
+      document.getElementById('success-section').classList.remove('visible');
+      document.getElementById('wish-form').reset();
+    }
+  </script>
+
+</body>
+</html>

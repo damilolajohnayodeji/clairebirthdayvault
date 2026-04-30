@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — Claire's Birthday Vault</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Background blobs -->
+  <div class="login-bg-blob-1"></div>
+  <div class="login-bg-blob-2"></div>
+
+  <div class="login-page">
+
+    <div class="login-card">
+
+      <!-- Logo -->
+      <div class="login-logo">
+        <div class="login-logo-icon">🎀</div>
+        <h1>Claire's Vault</h1>
+        <p>Your private birthday message archive</p>
+      </div>
+
+      <!-- Error -->
+      <div class="login-error" id="login-error">
+        Incorrect credentials. Please try again.
+      </div>
+
+      <!-- Form -->
+      <div class="login-form" id="login-form">
+
+        <div class="input-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Enter your username"
+            autocomplete="username"
+          />
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+          />
+        </div>
+
+        <button class="btn btn-primary btn-lg" id="login-btn" onclick="handleLogin()">
+          <span id="login-label">Sign In</span>
+          <div class="spinner" id="login-spinner" style="display:none;"></div>
+        </button>
+
+      </div>
+
+      <div class="divider"></div>
+
+      <p style="text-align:center; font-size: var(--text-sm); color: var(--muted); font-weight: 300;">
+        Want to leave a message for Claire?
+        <a href="index.html" style="color: var(--lavender); font-weight: 500;">Go back →</a>
+      </p>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer style="position:relative; z-index:1; background:transparent; border-top:none;">
+    <div class="container">
+      <div class="footer-inner">
+        <div>© 2026 Claire's Birthday Vault. All rights reserved.</div>
+        <div>Built by Damilola John Ayodeji &nbsp;·&nbsp; +234 904 924 0994</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const CREDENTIALS = {
+      username: 'Claire725',
+      password: '12345678'
+    };
+
+    // Redirect if already logged in
+    if (sessionStorage.getItem('cv_auth') === 'true') {
+      window.location.href = 'dashboard.html';
+    }
+
+    // Enter key support
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleLogin();
+    });
+
+    async function handleLogin() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const errEl    = document.getElementById('login-error');
+      const btn      = document.getElementById('login-btn');
+      const label    = document.getElementById('login-label');
+      const spinner  = document.getElementById('login-spinner');
+
+      errEl.classList.remove('visible');
+
+      if (!username || !password) {
+        errEl.textContent = 'Please enter your username and password.';
+        errEl.classList.add('visible');
+        return;
+      }
+
+      btn.disabled = true;
+      label.textContent = 'Signing in…';
+      spinner.style.display = 'block';
+
+      // Simulate slight delay for UX feel
+      await new Promise(r => setTimeout(r, 600));
+
+      if (username === CREDENTIALS.username && password === CREDENTIALS.password) {
+        sessionStorage.setItem('cv_auth', 'true');
+        window.location.href = 'dashboard.html';
+      } else {
+        errEl.textContent = 'Incorrect credentials. Please try again.';
+        errEl.classList.add('visible');
+        btn.disabled = false;
+        label.textContent = 'Sign In';
+        spinner.style.display = 'none';
+      }
+    }
+  </script>
+
+</body>
+</html>
