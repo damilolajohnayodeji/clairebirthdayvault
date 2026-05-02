@@ -3,8 +3,8 @@
    Supabase init + shared utilities
    ============================================ */
 
-const SUPABASE_URL     = "https://xtzhgmsyfntdtpukqako.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emhnbXN5Zm50ZHRwdWtxYWtvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3Njk3NjM0MSwiZXhwIjoyMDkyNTUyMzQxfQ.LjxH5r1yUk9T9UD4ZWBPbc0n-kSu-UT3HIGYFN6JNHE";
+const SUPABASE_URL     = 'https://xtzhgmsyfntdtpukqako.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0emhnbXN5Zm50ZHRwdWtxYWtvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3Njk3NjM0MSwiZXhwIjoyMDkyNTUyMzQxfQ.LjxH5r1yUk9T9UD4ZWBPbc0n-kSu-UT3HIGYFN6JNHE';
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
